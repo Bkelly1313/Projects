@@ -1,0 +1,47 @@
+--Add Column that calculates the overall rating % from the 14 criteria
+ALTER TABLE [PORT]..airline
+ADD Overall float 
+
+UPDATE [PORT]..airline
+SET [Overall] = (select round(([Departure and Arrival Time Convenience]+[Ease of Online Booking]
++[Check-in Service]+[Online Boarding]+[Gate Location]+[On-board Service]+[Seat Comfort]
++[Leg Room Service]+[Cleanliness]+[Food and Drink]+[In-flight Entertainment]
++[In-flight Service]+[In-flight Wifi Service]+[Baggage Handling])/(70)*100,2))
+from [PORT]..airline
+
+
+--Poller Info
+--Age Dist
+Select floor(Age/10)*10 as 'Age Bracket', Count(*) as [Count]
+from PORT..airline
+Group by floor(Age/10)*10
+order by floor(Age/10)*10
+
+--Class Dist
+Select Class, Count(*) As [Count]
+from PORT..airline 
+Group by Class
+
+--Gender Dist
+Select Gender, Count(*) As [Count]
+from PORT..airline 
+Group by Gender
+
+
+--Flight Distance Info
+select round(AVG([Flight Distance]),0) as 'Average Flight Distance in Miles', MIN([Flight Distance]) as 'Min Flight', Max([Flight Distance]) as 'Max Flight'
+from PORT..airline
+
+
+--Average Overall rating by class when In-Flight ammenities and Wifi Service >=3
+Select Class, round(AVG(Overall),0) as 'In Flight Entertainment'
+from PORT..airline
+Where [In-flight Entertainment] >=3
+and [In-flight Wifi Service] >= 3
+group by Class
+
+--Average Overall rating by class when Seat Comfort >=3
+Select Class, round(AVG(Overall),0) as 'Seat Comfort'
+from PORT..airline
+Where [Seat Comfort] >=4
+group by Class
