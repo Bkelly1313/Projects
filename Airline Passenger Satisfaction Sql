@@ -1,3 +1,5 @@
+Working with the airline table in the PORT database
+
 --Add Column that calculates the overall rating % from the 14 criteria
 ALTER TABLE [PORT]..airline
 ADD Overall float 
